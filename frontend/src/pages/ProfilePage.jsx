@@ -8,11 +8,10 @@ export default function ProfilePage() {
   const [plans, setPlans] = useState([]);
   const [profile, setProfile] = useState({ firstName: "", lastName: "", email: "", profilePicUrl: "" });
   const [loading, setLoading] = useState(true);
-
   const [editingPost, setEditingPost] = useState(null);
+  const [editingFiles, setEditingFiles] = useState(null);
   const [editingProgress, setEditingProgress] = useState(null);
   const [editingPlan, setEditingPlan] = useState(null);
-
   const [editingProfile, setEditingProfile] = useState(false);
   const [editedFirstName, setEditedFirstName] = useState("");
   const [editedLastName, setEditedLastName] = useState("");
@@ -31,19 +30,14 @@ export default function ProfilePage() {
   }, [navigate]);
 
   const fetchData = () => {
-    axios.get("http://localhost:8080/api/posts", { withCredentials: true })
-      .then(res => setPosts(res.data));
-    axios.get("http://localhost:8080/api/progress", { withCredentials: true })
-      .then(res => setProgress(res.data));
-    axios.get("http://localhost:8080/api/plans", { withCredentials: true })
-      .then(res => setPlans(res.data));
-    axios.get("http://localhost:8080/api/user/profile", { withCredentials: true })
-      .then(res => {
-        setProfile(res.data);
-        setEditedFirstName(res.data.firstName);
-        setEditedLastName(res.data.lastName);
-      })
-      .finally(() => setLoading(false));
+    axios.get("http://localhost:8080/api/posts", { withCredentials: true }).then(res => setPosts(res.data));
+    axios.get("http://localhost:8080/api/progress", { withCredentials: true }).then(res => setProgress(res.data));
+    axios.get("http://localhost:8080/api/plans", { withCredentials: true }).then(res => setPlans(res.data));
+    axios.get("http://localhost:8080/api/user/profile", { withCredentials: true }).then(res => {
+      setProfile(res.data);
+      setEditedFirstName(res.data.firstName);
+      setEditedLastName(res.data.lastName);
+    }).finally(() => setLoading(false));
   };
 
   const resolveUrl = (path) => path?.startsWith("http") ? path : `http://localhost:8080${path}`;
@@ -85,26 +79,44 @@ export default function ProfilePage() {
     setPosts(posts.filter(post => post.id !== postId));
   };
 
+  const handleEditPost = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("description", editingPost.description);
+    if (editingFiles) {
+      for (const file of editingFiles) {
+        formData.append("media", file);
+      }
+    }
+    try {
+      await axios.put(`http://localhost:8080/api/posts/${editingPost.id}`, formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      setEditingPost(null);
+      setEditingFiles(null);
+      fetchData();
+    } catch (err) {
+      console.error("Failed to update post", err);
+    }
+  };
+
   const handleDeleteProgress = async (progressId) => {
     await axios.delete(`http://localhost:8080/api/progress/${progressId}`, { withCredentials: true });
     setProgress(progress.filter(p => p.id !== progressId));
-  };
-
-  const handleDeletePlan = async (planId) => {
-    await axios.delete(`http://localhost:8080/api/plans/${planId}`, { withCredentials: true });
-    setPlans(plans.filter(p => p.id !== planId));
-  };
-
-  const handleEditPost = async () => {
-    await axios.put(`http://localhost:8080/api/posts/${editingPost.id}`, editingPost, { withCredentials: true });
-    setPosts(posts.map(p => p.id === editingPost.id ? editingPost : p));
-    setEditingPost(null);
   };
 
   const handleEditProgress = async () => {
     await axios.put(`http://localhost:8080/api/progress/${editingProgress.id}`, editingProgress, { withCredentials: true });
     setProgress(progress.map(p => p.id === editingProgress.id ? editingProgress : p));
     setEditingProgress(null);
+  };
+
+  const handleDeletePlan = async (planId) => {
+    await axios.delete(`http://localhost:8080/api/plans/${planId}`, { withCredentials: true });
+    setPlans(plans.filter(p => p.id !== planId));
   };
 
   const handleEditPlan = async () => {
@@ -160,18 +172,25 @@ export default function ProfilePage() {
               </div>
             </div>
             {(post.mediaUrls || []).map((url, j) => (
-              <img key={j} src={resolveUrl(url)} alt="media" width="150" style={{ marginRight: "5px" }} />
+              <img key={j} src={resolveUrl(url)} alt="media" width={150} style={{ marginRight: "5px" }} />
             ))}
             {editingPost?.id === post.id && (
-              <div>
-                <input
-                  type="text"
+              <form onSubmit={handleEditPost}>
+                <textarea
                   value={editingPost.description}
                   onChange={(e) => setEditingPost({ ...editingPost, description: e.target.value })}
+                  rows="3"
                   style={{ width: "100%" }}
                 />
-                <button onClick={handleEditPost}>Save</button>
-              </div>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*,video/*"
+                  onChange={(e) => setEditingFiles(e.target.files)}
+                />
+                <button type="submit">Save</button>
+                <button type="button" onClick={() => setEditingPost(null)} style={{ marginLeft: "10px" }}>Cancel</button>
+              </form>
             )}
           </div>
         )) : <p>No skill posts available.</p>}
