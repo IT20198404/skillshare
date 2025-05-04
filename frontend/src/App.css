@@ -1,38 +1,293 @@
+/* App.css */
+
+/* Menu Bar Styles */
 .nav {
   display: flex;
-  gap: 10px;
-  padding: 10px;
-  background: #e0e0e0;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #007bff;  /* Blue background color for the menu */
+  padding: 10px 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  border-radius: 8px; /* Rounded corners */
 }
+
 .nav a {
   text-decoration: none;
-  color: #333;
+  color: white; /* White text color */
+  font-weight: bold;
+  padding: 10px;
+  font-size: 16px; /* Increase font size for better readability */
+  transition: all 0.3s ease; /* Smooth transition effect */
 }
+
 .nav a:hover {
   text-decoration: underline;
+  color: #f39c12; /* Change color on hover for better interactivity */
 }
-.container {
-  padding: 20px;
-}
-input, textarea {
-  display: block;
-  margin: 10px 0;
-  padding: 8px;
-  width: 100%;
-  max-width: 500px;
-}
-button {
+
+.nav .logout-button {
   padding: 10px 20px;
-  background: #1976d2;
+  background-color: #e74c3c; /* Red background for logout button */
   color: white;
-  border: none;
+  border-radius: 5px;
+  font-weight: bold;
   cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
 }
-button:hover {
-  background: #1565c0;
+
+.nav .logout-button:hover {
+  background-color: #c0392b; /* Darker red when hovering */
 }
-.preview {
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f6f8; /* Light gray background for the whole page */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white; /* White background for the container */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.post {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+}
+
+.post-header {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.post-header img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.post-header div {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-header strong {
+  font-size: 16px;
+}
+
+.post-body {
+  font-size: 14px;
+  color: #555;
+  margin-top: 10px;
+}
+
+.post-media {
+  margin-top: 10px;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+button.like,
+button.comment {
+  background-color: #3498db;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+
+button.like:hover,
+button.comment:hover {
+  background-color: #2980b9;
+}
+
+.post-comments {
+  margin-top: 10px;
+}
+
+.comment-box {
+  margin-top: 10px;
+}
+
+.comment-box input {
+  width: calc(100% - 100px);
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-right: 10px;
+}
+
+.comment-box button {
+  background-color: #2ecc71;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+
+.comment-box button:hover {
+  background-color: #27ae60;
+}
+
+.comment {
   display: flex;
   gap: 10px;
-  margin: 10px 0;
+  margin-bottom: 10px;
+}
+
+.comment img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.comment div {
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.comment strong {
+  color: #333;
+}
+
+.comment-text {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Form Styles for My Activity Page */
+section {
+  margin-bottom: 30px; /* Add space between sections */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="file"],
+input[type="text"],
+input[type="date"],
+textarea {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+.preview img {
+  width: 100px;
+  height: 100px;
+  margin-right: 5px;
+  border-radius: 8px;
+}
+
+input[type="file"] {
+  margin-bottom: 10px;
+}
+
+/* Input fields and buttons for progress updates */
+textarea {
+  font-size: 14px;
+  height: 100px; /* Make the progress input taller */
+}
+
+.comment-box {
+  display: flex;
+  align-items: center;
+}
+
+.comment-box input {
+  width: calc(100% - 100px);
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-right: 10px;
+}
+
+.comment-box button {
+  background-color: #2ecc71;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+
+.comment-box button:hover {
+  background-color: #27ae60;
+}
+
+.comment {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.comment img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.comment div {
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.comment strong {
+  color: #333;
+}
+
+.comment-text {
+  font-size: 14px;
+  color: #555;
 }

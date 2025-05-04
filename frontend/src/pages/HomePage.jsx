@@ -6,23 +6,24 @@ import "../App.css";
 export default function HomePage() {
   const [posts, setPosts] = useState([]);
   const [currentUserEmail, setCurrentUserEmail] = useState("");
+  const [text, setText] = useState("");  // This is where we define the 'text' state
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Get current user email
+        // Get current user email
         const userRes = await axios.get("http://localhost:8080/api/user/me", {
           withCredentials: true,
         });
         const email = userRes.data.email;
         setCurrentUserEmail(email);
 
-        // 2. Get posts
+        // Get posts
         const postRes = await axios.get("http://localhost:8080/api/posts", {
           withCredentials: true,
         });
 
-        // 3. Set likedByUser flag for each post
+        // Set likedByUser flag for each post
         const postsWithLikedFlag = postRes.data.map((post) => ({
           ...post,
           likedByUser: post.likes?.some((like) => like.userEmail === email),
@@ -80,105 +81,61 @@ export default function HomePage() {
 
   return (
     <div className="container">
-      <h2>🔔 Home Feed</h2>
+      <h2>Home Feed</h2>
       {posts.map((post) => (
         <div key={post.id} className="post">
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div className="post-header">
             <img
-              src={resolveUrl(
-                post.likes?.[0]?.profilePicUrl || post.profilePicUrl || ""
-              )}
+              src={resolveUrl(post.likes?.[0]?.profilePicUrl || post.profilePicUrl || "")}
               alt="user"
-              width={40}
-              height={40}
-              style={{ borderRadius: "50%", marginRight: 10 }}
             />
             <div>
-              <p>
-                <strong>
-                  {post.likes?.[0]?.userName || post.fullName || post.userEmail}
-                </strong>
-              </p>
-              <p style={{ fontSize: 12 }}>{post.category || "Skill Post"}</p>
+              <strong>{post.likes?.[0]?.userName || post.fullName || post.userEmail}</strong>
+              <p className="category">{post.category || "Skill Post"}</p>
             </div>
           </div>
 
-          <p>{post.description || post.message || post.topic}</p>
+          <div className="post-body">
+            <p>{post.description || post.message || post.topic}</p>
+            {(post.mediaUrls || []).map((url, i) => (
+              <img key={i} src={resolveUrl(url)} alt="post-media" className="post-media" />
+            ))}
+          </div>
 
-          {(post.mediaUrls || []).map((url, i) => (
-            <img
-              key={i}
-              src={resolveUrl(url)}
-              alt="media"
-              width={150}
-              style={{ marginRight: 5 }}
-            />
-          ))}
-
-          <div style={{ marginTop: 10 }}>
-            <button disabled={post.likedByUser} onClick={() => handleLike(post.id)}>
+          <div className="post-actions">
+            <button
+              className="like"
+              disabled={post.likedByUser}
+              onClick={() => handleLike(post.id)}
+            >
               ❤️ Like
             </button>
-            <span style={{ marginLeft: 10 }}>{(post.likes || []).length} likes</span>
+            <span>{(post.likes || []).length} likes</span>
+            <button className="comment">💬 Comment</button>
           </div>
 
-          <div style={{ marginTop: 5 }}>
-            {(post.likes || []).map((like, idx) => (
-              <img
-                key={idx}
-                src={resolveUrl(like.profilePicUrl)}
-                alt={like.userName}
-                title={like.userName}
-                width={25}
-                height={25}
-                style={{ borderRadius: "50%", marginRight: 3 }}
-              />
-            ))}
-          </div>
-
-          <div>
-            <h4 style={{ marginTop: 10 }}>💬 Comments</h4>
+          <div className="post-comments">
             {(post.comments || []).map((c, i) => (
-              <div
-                key={i}
-                style={{ display: "flex", alignItems: "center", marginBottom: 5 }}
-              >
-                <img
-                  src={resolveUrl(c.profilePicUrl)}
-                  alt={c.userName}
-                  width={25}
-                  height={25}
-                  style={{ borderRadius: "50%", marginRight: 5 }}
-                />
-                <strong>{c.userName}</strong>: {c.message}
+              <div key={i} className="comment">
+                <img src={resolveUrl(c.profilePicUrl)} alt={c.userName} />
+                <div>
+                  <strong>{c.userName}</strong>: <span className="comment-text">{c.message}</span>
+                </div>
               </div>
             ))}
-            <CommentInput postId={post.id} onSubmit={handleComment} />
+          </div>
+
+          <div className="comment-box">
+            <input
+              type="text"
+              placeholder="Write a comment..."
+              value={text}  // Bind the text state to the input
+              onChange={(e) => setText(e.target.value)}  // Use setText to update the state
+            />
+            <button onClick={() => handleComment(post.id, text)}>Post</button>
           </div>
         </div>
       ))}
     </div>
-  );
-}
-
-function CommentInput({ postId, onSubmit }) {
-  const [text, setText] = useState("");
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit(postId, text);
-        setText("");
-      }}
-    >
-      <input
-        type="text"
-        placeholder="Write a comment..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        style={{ width: "80%", marginRight: 5 }}
-      />
-      <button type="submit">Post</button>
-    </form>
   );
 }

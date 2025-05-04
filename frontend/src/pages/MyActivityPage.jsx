@@ -1,5 +1,7 @@
+// File: src/pages/MyActivityPage.jsx
 import React, { useState } from "react";
 import axios from "axios";
+import "../App.css";
 
 export default function MyActivityPage() {
   // Skill Post States
@@ -30,12 +32,12 @@ export default function MyActivityPage() {
       await axios.post("http://localhost:8080/api/posts", data, {
         withCredentials: true,
       });
-      alert("✅ Skill post uploaded!");
+      alert("Skill post uploaded!");
       setFiles([]);
       setDescription("");
       setPreview([]);
     } catch (err) {
-      alert("❌ Upload failed");
+      alert("Upload failed");
       console.error(err);
     }
   };
@@ -52,10 +54,10 @@ export default function MyActivityPage() {
           headers: { "Content-Type": "application/json" },
         }
       );
-      alert("✅ Progress submitted!");
+      alert("Progress submitted!");
       setProgress("");
     } catch (err) {
-      alert("❌ Progress submission failed");
+      alert("Progress submission failed");
     }
   };
 
@@ -67,10 +69,10 @@ export default function MyActivityPage() {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
-      alert("✅ Learning plan submitted!");
+      alert("Learning plan submitted!");
       setPlan({ topic: "", resources: "", deadline: "" });
     } catch (err) {
-      alert("❌ Plan submission failed");
+      alert("Plan submission failed");
     }
   };
 
@@ -149,7 +151,7 @@ export default function MyActivityPage() {
           <input
             type="text"
             name="resources"
-            placeholder="Resources (e.g., YouTube)"
+            placeholder="Description of the project"
             value={plan.resources}
             onChange={handlePlanChange}
             style={{ width: "100%", marginBottom: "10px" }}

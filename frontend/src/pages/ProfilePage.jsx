@@ -161,7 +161,7 @@ export default function ProfilePage() {
 
       {/* Skill Posts */}
       <section>
-        <h3>📤 Skill Posts</h3>
+        <h3>Skill Posts</h3>
         {posts.length > 0 ? posts.map((post) => (
           <div key={post.id} style={{ borderBottom: "1px solid #ccc", paddingBottom: "10px", marginBottom: "10px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -200,7 +200,7 @@ export default function ProfilePage() {
 
       {/* Learning Progress */}
       <section>
-        <h3>📈 Learning Progress</h3>
+        <h3>Learning Progress</h3>
         {progress.length > 0 ? progress.map((item) => (
           <div key={item.id} style={{ borderBottom: "1px solid #ccc", paddingBottom: "10px", marginBottom: "10px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -229,7 +229,7 @@ export default function ProfilePage() {
 
       {/* Learning Plans */}
       <section>
-        <h3>📝 Learning Plans</h3>
+        <h3>Learning Plans</h3>
         {plans.length > 0 ? plans.map((p) => (
           <div key={p.id} style={{ borderBottom: "1px solid #ccc", paddingBottom: "10px", marginBottom: "10px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>

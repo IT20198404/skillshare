@@ -69,7 +69,7 @@ function App() {
             </button>
           </>
         )}
-        {!isAuthenticated && <Link to="/login">Login</Link>}
+        {!isAuthenticated && <Link to="/login"></Link>}
       </nav>
 
       <Routes>

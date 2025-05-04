@@ -15,7 +15,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="container">
-      <h2>🔔 Notifications</h2>
+      <h2>Notifications</h2>
       <ul>
         {notifications.map((note) => (
           <li key={note.id}>

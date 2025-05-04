@@ -7,9 +7,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container">
-      <h2>Login</h2>
-      <button onClick={handleLogin}>Login with Google (OAuth 2.0)</button>
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Login</h2>
+        <button
+          className="login-btn"
+          onClick={handleLogin}
+          style={{
+            display: "block",        // Make the button a block element
+            margin: "0 auto",        // Auto margin to center it horizontally
+            textAlign: "center",     // Center the text inside the button (if needed)
+          }}
+        >
+          Login with Google
+        </button>
+      </div>
     </div>
   );
 }
