@@ -43,6 +43,21 @@ public class PostController {
         return posts;
     }
 
+    // ✅ NEW: Only get posts created by the logged-in user
+    @GetMapping("/my")
+    public List<SkillPost> getMyPosts(@AuthenticationPrincipal OAuth2User principal) {
+        String userEmail = principal.getAttribute("email");
+        List<SkillPost> posts = skillPostRepo.findByUserEmail(userEmail);
+        posts.forEach(post -> {
+            List<Like> likes = postService.getLikesForPost(post.getId());
+            List<Comment> comments = postService.getCommentsForPost(post.getId());
+            post.setLikes(likes);
+            post.setComments(comments);
+        });
+        posts.sort(Comparator.comparing(SkillPost::getId).reversed());
+        return posts;
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createPost(
             @RequestParam("description") String description,

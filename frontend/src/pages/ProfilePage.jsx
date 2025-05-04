@@ -235,7 +235,7 @@ export default function ProfilePage() {
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
                 <p><strong>Topic:</strong> {p.topic}</p>
-                <p><strong>Resources:</strong> {p.resources}</p>
+                <p><strong>Description:</strong> {p.resources}</p>
                 <p><strong>Deadline:</strong> {p.deadline}</p>
               </div>
               <div>
