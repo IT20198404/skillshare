@@ -7,17 +7,24 @@ import com.skillshare.model.SkillPost;
 import com.skillshare.repository.SkillPostRepository;
 import com.skillshare.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class PostController {
 
     private final SkillPostRepository skillPostRepo;
@@ -25,10 +32,45 @@ public class PostController {
 
     @GetMapping
     public List<SkillPost> getAll(@AuthenticationPrincipal OAuth2User principal) {
-        String email = principal.getAttribute("email");
-        List<SkillPost> posts = skillPostRepo.findByUserEmail(email);
-        posts.sort(Comparator.comparing(SkillPost::getId).reversed()); // fallback for missing createdAt
+        List<SkillPost> posts = skillPostRepo.findAll();
+        posts.forEach(post -> {
+            List<Like> likes = postService.getLikesForPost(post.getId());
+            List<Comment> comments = postService.getCommentsForPost(post.getId());
+            post.setLikes(likes);
+            post.setComments(comments);
+        });
+        posts.sort(Comparator.comparing(SkillPost::getId).reversed());
         return posts;
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createPost(
+            @RequestParam("description") String description,
+            @RequestParam(value = "media", required = false) List<MultipartFile> mediaFiles,
+            @AuthenticationPrincipal OAuth2User principal) {
+
+        List<String> mediaUrls = new ArrayList<>();
+
+        if (mediaFiles != null) {
+            for (MultipartFile file : mediaFiles) {
+                try {
+                    String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                    Path filePath = Paths.get("uploads", filename);
+                    Files.createDirectories(filePath.getParent());
+                    Files.write(filePath, file.getBytes());
+                    mediaUrls.add("/uploads/" + filename);
+                } catch (IOException e) {
+                    return ResponseEntity.internalServerError().body("File upload failed");
+                }
+            }
+        }
+
+        SkillPost post = new SkillPost();
+        post.setDescription(description);
+        post.setMediaUrls(mediaUrls);
+        post.setUserEmail(principal.getAttribute("email"));
+
+        return ResponseEntity.ok(postService.save(post));
     }
 
     @DeleteMapping("/{id}")
@@ -76,7 +118,7 @@ public class PostController {
         String email = principal.getAttribute("email");
         String name = principal.getAttribute("name");
         String pic = principal.getAttribute("picture");
-        String message = payload.get("text");
+        String message = payload.get("message");
         Comment comment = new Comment(null, postId, email, name, pic, message, System.currentTimeMillis());
         return ResponseEntity.ok(postService.addComment(comment));
     }

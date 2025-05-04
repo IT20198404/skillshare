@@ -24,6 +24,13 @@ public class UserController {
     private final LearningPlanRepository learningPlanRepository;
     private final LearningProgressRepository learningProgressRepository;
 
+    @GetMapping("/me")
+    public Map<String, String> getCurrentUserEmail(@AuthenticationPrincipal OAuth2User principal) {
+        String email = principal.getAttribute("email");
+        Map<String, String> response = new HashMap<>();
+        response.put("email", email);
+        return response;
+    }
     // Check if profile is set
     @GetMapping
     public Map<String, Object> getUser(@AuthenticationPrincipal OAuth2User principal) {

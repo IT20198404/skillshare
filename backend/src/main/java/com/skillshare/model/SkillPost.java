@@ -1,7 +1,9 @@
+// File: src/main/java/com/skillshare/model/SkillPost.java
 package com.skillshare.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -17,4 +19,10 @@ public class SkillPost {
     private String userEmail;
     private String description;
     private List<String> mediaUrls;
+
+    @Transient
+    private List<Like> likes;
+
+    @Transient
+    private List<Comment> comments;
 }
