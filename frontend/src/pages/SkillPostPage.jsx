@@ -26,12 +26,12 @@ export default function SkillPostPage() {
         },
       });
 
-      alert("✅ Post uploaded successfully.");
+      alert("Post uploaded successfully.");
       setFiles([]);
       setDescription("");
       setPreview([]);
     } catch (err) {
-      alert("❌ Upload failed.");
+      alert("Upload failed.");
       console.error(err);
     }
   };

@@ -1,4 +1,4 @@
-// File: src/pages/NotificationsPage.jsx
+//NotificationsPage.jsx
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";

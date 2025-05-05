@@ -1,3 +1,4 @@
+//LikeController.java
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -22,7 +23,7 @@ export default function LearningProgressPage() {
       alert("✅ Progress submitted!");
       setProgress("");
     } catch (error) {
-      console.error("❌ Submission failed:", error);
+      console.error("Submission failed:", error);
       alert("Please log in first via Google.");
     }
   };

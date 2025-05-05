@@ -1,4 +1,4 @@
-// File: src/components/PostCard.jsx
+//PostCard.jsx
 
 import React, { useState } from "react";
 import axios from "axios";

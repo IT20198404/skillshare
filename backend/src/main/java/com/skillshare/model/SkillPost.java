@@ -1,4 +1,4 @@
-// File: src/main/java/com/skillshare/model/SkillPost.java
+//SkillPost.java
 package com.skillshare.model;
 
 import lombok.*;

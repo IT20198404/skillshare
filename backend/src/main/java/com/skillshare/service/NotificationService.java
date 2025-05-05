@@ -1,4 +1,4 @@
-// File: src/main/java/com/skillshare/service/NotificationService.java
+//NotificationService.java
 package com.skillshare.service;
 
 import com.skillshare.model.Notification;
